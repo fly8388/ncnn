@@ -25,14 +25,14 @@ CpuFlagTest::CpuFlagTest()
         __cpuidex(_cpu_info, info_eax, info_ecx);
 #elif defined(_M_IX86)
         __asm {
-			mov eax, info_eax
-			mov ecx, info_ecx
-			mov edi, _cpu_info
-			cpuid
-			mov [edi], eax
-			mov [edi + 4], ebx
-			mov [edi + 8], ecx
-			mov [edi + 12], edx
+            mov eax, info_eax
+            mov ecx, info_ecx
+            mov edi, _cpu_info
+            cpuid
+            mov [edi], eax
+            mov [edi + 4], ebx
+            mov [edi + 8], ecx
+            mov [edi + 12], edx
         }
 #else // Visual C but not x86
         if (info_ecx == 0)
@@ -59,20 +59,20 @@ CpuFlagTest::CpuFlagTest()
             "cpuid                                     \n"
             : "=b"(info_ebx),
 #endif //  defined( __i386__) && defined(__PIC__)
-              "+a"(info_eax), "+c"(info_ecx), "=d"(info_edx));
+            "+a"(info_eax), "+c"(info_ecx), "=d"(info_edx));
         return {info_eax, info_ebx, info_ecx, info_edx};
 #endif // defined(_MSC_VER)
     };
     static std::function<int()> _get_xcr0 = []() {
-    // For VS2010 and earlier emit can be used:
-    //   _asm _emit 0x0f _asm _emit 0x01 _asm _emit 0xd0  // For VS2010 and earlier.
-    //  __asm {
-    //    xor        ecx, ecx    // xcr 0
-    //    xgetbv
-    //    mov        xcr0, eax
-    //  }
-    // For VS2013 and earlier 32 bit, the _xgetbv(0) optimizer produces bad code.
-    // https://code.google.com/p/libyuv/issues/detail?id=529
+        // For VS2010 and earlier emit can be used:
+        //   _asm _emit 0x0f _asm _emit 0x01 _asm _emit 0xd0  // For VS2010 and earlier.
+        //  __asm {
+        //    xor        ecx, ecx    // xcr 0
+        //    xgetbv
+        //    mov        xcr0, eax
+        //  }
+        // For VS2013 and earlier 32 bit, the _xgetbv(0) optimizer produces bad code.
+        // https://code.google.com/p/libyuv/issues/detail?id=529
 #if defined(_M_IX86) && (_MSC_VER < 1900)
 #pragma optimize("g", off)
 #endif
@@ -92,7 +92,7 @@ CpuFlagTest::CpuFlagTest()
         // xgetbv unavailable to query for OSSave support.  Return 0.
         return 0;
 #endif // defined(_M_IX86) || defined(_M_X64) .. \
-       // Return optimization to previous setting.
+// Return optimization to previous setting.
 #if defined(_M_IX86) && (_MSC_VER < 1900)
 #pragma optimize("g", on)
 #endif
